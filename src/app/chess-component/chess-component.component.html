@@ -1,1 +1,103 @@
-<p>chess-component works!</p>
+<table class="chess-board" (click)="onCalled($event)">
+    <tbody>
+        <tr>
+            <th></th>
+            <th>A</th>
+            <th>B</th>
+            <th>C</th>
+            <th>D</th>
+            <th>E</th>
+            <th>F</th>
+            <th>G</th>
+            <th>H</th>
+        </tr>
+        <tr>
+            <th>8</th>
+            <td id ="81" player ="white" piece="rook" class="light">♖</td>
+            <td id ="82" player ="white" piece="horse" class="dark">♘</td>
+            <td id ="83" player ="white" piece="bishop" class="light">♗</td>
+            <td id ="84" player ="white" piece="queen" class="dark">♕</td>
+            <td id ="85" player ="white" piece="king" class="light">♔</td>
+            <td id ="86" player ="white" piece="bishop" class="dark">♗</td>
+            <td id ="87" player ="white" piece="horse" class="light">♘</td>
+            <td id ="88" player ="white" piece="rook" class="dark">♖</td>
+        </tr>
+        <tr>
+            <th>7</th>
+            <td id ="71" player ="white" piece="pawn" class="dark">♙</td>
+            <td id ="72" player ="white" piece="pawn" class="light">♙</td>
+            <td id ="73" player ="white" piece="pawn" class="dark">♙</td>
+            <td id ="74" player ="white" piece="pawn" class="light">♙</td>
+            <td id ="75" player ="white" piece="pawn" class="dark">♙</td>
+            <td id ="76" player ="white" piece="pawn" class="light">♙</td>
+            <td id ="77" player ="white" piece="pawn" class="dark">♙</td>
+            <td id ="78" player ="white" piece="pawn" class="light">♙</td>
+        </tr>
+        <tr>
+            <th>6</th>
+            <td id ="61" player ="" piece="" class="light"></td>
+            <td id ="62" player ="" piece="" class="dark"></td>
+            <td id ="63" player ="" piece="" class="light"></td>
+            <td id ="64" player ="" piece="" class="dark"></td>
+            <td id ="65" player ="" piece="" class="light"></td>
+            <td id ="66" player ="" piece="" class="dark"></td>
+            <td id ="67" player ="" piece="" class="light"></td>
+            <td id ="68" player ="" piece="" class="dark"></td>
+        </tr>
+        <tr>
+            <th>5</th>
+            <td id ="51" player ="" piece="" class="dark"></td>
+            <td id ="52" player ="" piece="" class="light"></td>
+            <td id ="53" player ="" piece="" class="dark"></td>
+            <td id ="54" player ="" piece="" class="light"></td>
+            <td id ="55" player ="" piece="" class="dark"></td>
+            <td id ="56" player ="" piece="" class="light"></td>
+            <td id ="57" player ="" piece="" class="dark"></td>
+            <td id ="58" player ="" piece="" class="light"></td>
+        </tr>
+        <tr>
+            <th>4</th>
+            <td id ="41" player ="" piece="" class="light"></td>
+            <td id ="42" player ="" piece="" class="dark"></td>
+            <td id ="43" player ="" piece="" class="light"></td>
+            <td id ="44" player ="" piece="" class="dark"></td>
+            <td id ="45" player ="" piece="" class="light"></td>
+            <td id ="46" player ="" piece="" class="dark"></td>
+            <td id ="47" player ="" piece="" class="light"></td>
+            <td id ="48" player ="" piece="" class="dark"></td>
+        </tr>
+        <tr>
+            <th>3</th>
+            <td id ="31" player ="" piece="" class="dark"></td>
+            <td id ="32" player ="" piece="" class="light"></td>
+            <td id ="33" player ="" piece="" class="dark"></td>
+            <td id ="34" player ="" piece="" class="light"></td>
+            <td id ="35" player ="" piece="" class="dark"></td>
+            <td id ="36" player ="" piece="" class="light"></td>
+            <td id ="37" player ="" piece="" class="dark"></td>
+            <td id ="38" player ="" piece="" class="light"></td>
+        </tr>
+        <tr>
+            <th>2</th>
+            <td id ="21" player ="black" piece="pawn" class="light">♟</td>
+            <td id ="22" player ="black" piece="pawn" class="dark">♟</td>
+            <td id ="23" player ="black" piece="pawn" class="light">♟</td>
+            <td id ="24" player ="black" piece="pawn" class="dark">♟</td>
+            <td id ="25" player ="black" piece="pawn" class="light">♟</td>
+            <td id ="26" player ="black" piece="pawn" class="dark">♟</td>
+            <td id ="27" player ="black" piece="pawn" class="light">♟</td>
+            <td id ="28" player ="black" piece="pawn" class="dark">♟</td>
+        </tr>
+        <tr>
+            <th>1</th>
+            <td id ="11" player ="black" piece="rook" class="dark">♜</td>
+            <td id ="12" player ="black" piece="horse" class="light">♞</td>
+            <td id ="13" player ="black" piece="bishop" class="dark">♝</td>
+            <td id ="14" player ="black" piece="queen" class="light">♛</td>
+            <td id ="15" player ="black" piece="king" class="dark">♚</td>
+            <td id ="16" player ="black" piece="bishop" class="light">♝</td>
+            <td id ="17" player ="black" piece="horse" class="dark">♞</td>
+            <td id ="18" player ="black" piece="rook" class="light">♜</td>
+        </tr>
+    </tbody>
+</table>
