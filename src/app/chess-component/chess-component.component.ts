@@ -86,43 +86,42 @@ currentTurn: string = "black"; //change to white
    console.log("piece: "+ document.getElementById(this.targetFieldId)?.getAttribute('piece'));
    console.log(!isTheTileClear);
 
-   if(this.currentTurn == "white")
-   {
-     if(isTheTileClear || selectedPieceColour == "black")
-    {
-      this.tryMovePiece(this.targetFieldId);
-    }
-    else if(selectedPieceColour == "white")
-    {
-      for(var i = 0; i < potentialMoveElements.length; i++)
+  if(this.currentTurn == "white")
+  {
+      if(isTheTileClear || selectedPieceColour == "black")
       {
-        potentialMoveElements[i].classList.remove("potentialMove");
+        this.tryMovePiece(this.targetFieldId);
       }
-
-      /*switch(chessPiece)
+      else if(selectedPieceColour == "white")
       {
-        case "pawn":
-          this.blackPawnMovement(this.targetFieldId);
-          break;
-        case "rook":
-          this.blackRookMovement(this.targetFieldId);
-          break;
-      }*/
+        for(var i = 0; i < potentialMoveElements.length; i++)
+        {
+          potentialMoveElements[i].classList.remove("potentialMove");
+        }
+
+        /*switch(chessPiece)
+        {
+          case "pawn":
+            this.blackPawnMovement(this.targetFieldId);
+            break;
+          case "rook":
+            this.blackRookMovement(this.targetFieldId);
+            break;
+        }*/
+      }
     }
-   }
-   else if(this.currentTurn == "black")
-   {
-     if(isTheTileClear || selectedPieceColour == "white")
+  else if(this.currentTurn == "black")
+  {
+    if(isTheTileClear || selectedPieceColour == "white")
     {
       this.tryMovePiece(this.targetFieldId);
-
     }
     else if(selectedPieceColour == "black")
     {
-     while(potentialMoveElements.length > 0)
-     {
+      while(potentialMoveElements.length > 0)
+      {
         potentialMoveElements[0].classList.remove("potentialMove");
-     }
+      }
 
       switch(chessPiece)
       {
@@ -132,11 +131,17 @@ currentTurn: string = "black"; //change to white
         case "rook":
           this.blackRookMovement(this.targetFieldId);
           break;
+        case "horse":
+          this.blackHorseMovement(this.targetFieldId);
+          break;
+        case "bishop":
+          this.blackBishopMovement(this.targetFieldId);
+          break;
       }
    }
 
   } //+ if the tile is clear or if there is piece of the opposite colour; else if the piece is current colour
- }
+}
 
  //shows potential move and marks it
  blackPawnMovement(id: string)
@@ -198,8 +203,179 @@ currentTurn: string = "black"; //change to white
    var colPos = parseInt(id[0]);
    var rowPos = parseInt(id[1]);
    this.latestFieldId = id;
-   this.latestPieceType = 'rook';
+   this.latestPieceType = 'horse';
    this.latestPieceColour = 'black';
+
+   var upLeftLMove = (colPos+2).toString() + (rowPos-1).toString();
+   var upRightLMove = (colPos+2).toString() + (rowPos+1).toString();
+   var leftUpLMove = (colPos+1).toString() + (rowPos -2).toString();
+   var leftDownLMove = (colPos-1).toString() + (rowPos-2).toString();
+   var rightUpLMove = (colPos+1).toString() + (rowPos+2).toString();
+   var rightDownLMove = (colPos-1).toString() + (rowPos+2).toString();
+   var downRightLMove = (colPos-2).toString() + (rowPos+1).toString();
+   var downLeftLMove = (colPos-2).toString() + (rowPos-1).toString();
+
+   var horseMovesArr: string[] = [upLeftLMove,upRightLMove,leftUpLMove,leftDownLMove,rightUpLMove,rightDownLMove,downRightLMove,downLeftLMove];
+   
+   for(var i = 0; i < horseMovesArr.length; i++)
+   {
+     console.log(horseMovesArr[i]);
+     if(!this.isBlack(horseMovesArr[i]))
+     {
+       document.getElementById(horseMovesArr[i])?.classList.add("potentialMove");
+     }
+   }
+ }
+
+ blackBishopMovement(id: string)
+ {
+   var colPos = parseInt(id[0]);
+   var rowPos = parseInt(id[1]);
+   this.latestFieldId = id;
+   this.latestPieceType = 'bishop';
+   this.latestPieceColour = 'black';
+
+   //checks whether there is a piece on the way
+   var noMoreUL = false;
+   var noMoreUR = false;
+   var noMoreDL = false;
+   var noMoreDR = false;
+
+   var c = colPos + 1;
+   var r = rowPos - 1;
+
+   //col+i row-i UL
+   while(c <= 8 && r > 0)
+   {
+     if(!noMoreUL)
+     {
+      var currentIterationBid = c.toString() + r.toString();
+      if(this.isBlack(currentIterationBid))
+      {
+        noMoreUL = true;
+      }
+      else
+      {
+        if(!this.isWhite(currentIterationBid))
+        {
+          document.getElementById(currentIterationBid)?.classList.add("potentialMove");
+        }
+        else
+        {
+          document.getElementById(currentIterationBid)?.classList.add("potentialMove");
+          noMoreUL = true;
+        }
+      }
+     }
+     else
+     {
+       break;
+     }
+     c++;
+     r--;
+   }
+
+   c = colPos+1;
+   r = rowPos+1;
+
+   //col+i row+i UR
+   while(c <= 8 && r <= 8)
+   {
+     if(!noMoreUR)
+     {
+      var currentIterationBid = c.toString() + r.toString();
+      if(this.isBlack(currentIterationBid))
+      {
+        noMoreUR = true;
+      }
+      else
+      {
+        if(!this.isWhite(currentIterationBid))
+        {
+          document.getElementById(currentIterationBid)?.classList.add("potentialMove");
+        }
+        else
+        {
+          document.getElementById(currentIterationBid)?.classList.add("potentialMove");
+          noMoreUR = true;
+        }
+      }
+     }
+     else
+     {
+       break;
+     }
+     c++;
+     r++;
+   }
+
+   c = colPos-1;
+   r = rowPos-1;
+
+   //col-i row-i DL
+   while(c > 0 && r > 0)
+   {
+     if(!noMoreDL)
+     {
+      var currentIterationBid = c.toString() + r.toString();
+      if(this.isBlack(currentIterationBid))
+      {
+        noMoreDL = true;
+      }
+      else
+      {
+        if(!this.isWhite(currentIterationBid))
+        {
+          document.getElementById(currentIterationBid)?.classList.add("potentialMove");
+        }
+        else
+        {
+          document.getElementById(currentIterationBid)?.classList.add("potentialMove");
+          noMoreDL = true;
+        }
+      }
+     }
+     else
+     {
+       break;
+     }
+     c--;
+     r--;
+   }
+   
+   c = colPos-1;
+   r = rowPos+1;
+
+   //col-i row+i DR
+   while(c > 0 && r <= 8)
+   {
+     if(!noMoreDR)
+     {
+      var currentIterationBid = c.toString() + r.toString();
+      if(this.isBlack(currentIterationBid))
+      {
+        noMoreDR = true;
+      }
+      else
+      {
+        if(!this.isWhite(currentIterationBid))
+        {
+          document.getElementById(currentIterationBid)?.classList.add("potentialMove");
+        }
+        else
+        {
+          document.getElementById(currentIterationBid)?.classList.add("potentialMove");
+          noMoreDR = true;
+        }
+      }
+     }
+     else
+     {
+       break;
+     }
+     c--;
+     r++;
+   }
  }
 
  blackRookMovement(id: string)
@@ -388,14 +564,21 @@ currentTurn: string = "black"; //change to white
        document.getElementById(id)?.setAttribute('player', 'black');
        switch(this.latestPieceType)
        {
-         case 'rook':
-           document.getElementById(id)!.innerHTML = ChessFigures.BlackRook;
-           document.getElementById(id)?.setAttribute('piece', 'rook');
-           break;
-         case 'pawn':
-           document.getElementById(id)!.innerHTML = ChessFigures.BlackPawn;
-           document.getElementById(id)?.setAttribute('piece', 'pawn');
-           break;
+          case 'rook':
+            document.getElementById(id)!.innerHTML = ChessFigures.BlackRook;
+            document.getElementById(id)?.setAttribute('piece', 'rook');
+            break;
+          case 'pawn':
+            document.getElementById(id)!.innerHTML = ChessFigures.BlackPawn;
+            document.getElementById(id)?.setAttribute('piece', 'pawn');
+            break;
+          case 'horse':
+            document.getElementById(id)!.innerHTML = ChessFigures.BlackHorse;
+            document.getElementById(id)?.setAttribute('piece', 'horse');
+            break;
+          case 'bishop':
+            document.getElementById(id)!.innerHTML = ChessFigures.BlackBishop;
+            document.getElementById(id)?.setAttribute('piece', 'bishop');
        }
      }
      else if(this.latestPieceColour == 'white')
