@@ -137,6 +137,9 @@ currentTurn: string = "black"; //change to white
         case "bishop":
           this.blackBishopMovement(this.targetFieldId);
           break;
+        case "queen":
+          this.blackQueenMovement(this.targetFieldId);
+          break;
       }
    }
 
@@ -225,6 +228,18 @@ currentTurn: string = "black"; //change to white
        document.getElementById(horseMovesArr[i])?.classList.add("potentialMove");
      }
    }
+ }
+
+ blackQueenMovement(id: string)
+ {
+  this.latestFieldId = id;
+  this.latestPieceType = 'queen';
+  this.latestPieceColour = 'black';
+
+  this.blackBishopMovement(id);
+  this.latestPieceType = 'queen';
+  this.blackRookMovement(id);
+  this.latestPieceType = 'queen';
  }
 
  blackBishopMovement(id: string)
@@ -579,6 +594,11 @@ currentTurn: string = "black"; //change to white
           case 'bishop':
             document.getElementById(id)!.innerHTML = ChessFigures.BlackBishop;
             document.getElementById(id)?.setAttribute('piece', 'bishop');
+            break;
+          case 'queen':
+            document.getElementById(id)!.innerHTML = ChessFigures.BlackQueen;
+            document.getElementById(id)?.setAttribute('piece', 'queen');
+            break;
        }
      }
      else if(this.latestPieceColour == 'white')
