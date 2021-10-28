@@ -140,6 +140,9 @@ currentTurn: string = "black"; //change to white
         case "queen":
           this.blackQueenMovement(this.targetFieldId);
           break;
+        case "king":
+          this.blackKingMovement(this.targetFieldId);
+          break;
       }
    }
 
@@ -199,6 +202,42 @@ currentTurn: string = "black"; //change to white
    }
 
    //if(colPos == 2 && this.isClear(id))
+ }
+
+ blackKingMovement(id: string)
+ {
+  var colPos = parseInt(id[0]);
+  var rowPos = parseInt(id[1]);
+  this.latestFieldId = id;
+  this.latestPieceType = 'king';
+  this.latestPieceColour = 'black';
+
+  //col+1
+  var upMove = (colPos+1).toString() + rowPos.toString();
+  //col-1
+  var downMove = (colPos-1).toString() + rowPos.toString();
+  //row+1
+  var rightMove = (colPos).toString() + (rowPos+1).toString();
+  //row-1
+  var leftMove = (colPos).toString() + (rowPos-1).toString();
+  //col+1 row-1
+  var upLeftMove = (colPos+1).toString() + (rowPos-1).toString();
+  //col+1 row+1
+  var upRightMove = (colPos+1).toString() + (rowPos+1).toString();
+  //col-1 row-1
+  var downLeftMove = (colPos-1).toString() + (rowPos-1).toString();
+  //col-1 row+1
+  var downRightMove = (colPos-1).toString() + (rowPos+1).toString();
+
+  var kingMovesArr: string[] = [upMove, downMove, rightMove, leftMove, upLeftMove, upRightMove, downLeftMove, downRightMove];
+
+  for(var s = 0; s < kingMovesArr.length; s++)
+  {
+    if(!this.isBlack(kingMovesArr[s]))
+    {
+      document.getElementById(kingMovesArr[s])?.classList.add("potentialMove");
+    }
+  }
  }
 
  blackHorseMovement(id: string)
@@ -598,6 +637,10 @@ currentTurn: string = "black"; //change to white
           case 'queen':
             document.getElementById(id)!.innerHTML = ChessFigures.BlackQueen;
             document.getElementById(id)?.setAttribute('piece', 'queen');
+            break;
+          case 'king':
+            document.getElementById(id)!.innerHTML = ChessFigures.BlackKing;
+            document.getElementById(id)?.setAttribute('piece', 'king');
             break;
        }
      }
