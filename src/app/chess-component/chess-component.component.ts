@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ChessFigures } from './chess-figures';
-import { chessMovement } from './chess-movement';
+import { ChessFigures } from './shared/chess-figures';
+import { chessMovement } from './shared/chess-movement';
+import { chessPiecesData } from './shared/chess-pieces-data';
 
 @Component({
   selector: 'app-chess-component',
@@ -9,59 +10,11 @@ import { chessMovement } from './chess-movement';
 })
 export class ChessComponentComponent implements OnInit 
 {
-//---------black-pieces---------
-blackRookLeftPos: string = "11";
-blackRookRightPos: string = "18";
-
-blackKnightLeftPos: string = "12";
-blackKnightRightPos: string = "17";
-
-blackBishopRightPos: string = "13";
-blackBishopLeftPos: string = "16";
-
-blackQueenPos: string = "14";
-blackKingPos: string = "15";
-
-//pawn from left to right
-
-blackPawn1Pos: string = "21";
-blackPawn2Pos: string = "22";
-blackPawn3Pos: string = "23";
-blackPawn4Pos: string = "24";
-blackPawn5Pos: string = "25";
-blackPawn6Pos: string = "26";
-blackPawn7Pos: string = "27";
-blackPawn8Pos: string = "28";
-
-//---------white-pieces---------
-
-whiteRookLeftPos: string = "81";
-whiteRookRightPos: string = "88";
-
-whiteKnightLeftPos: string = "82";
-whiteKnightRightPos: string = "87";
-
-whiteBishopLeftPos: string = "83";
-whiteBishopRightPos: string = "86";
-
-whiteQueenPos: string = "84";
-whiteKingPos: string = "85";
-
-//pawn from left to right
-
-whitePawn1Pos: string = "71";
-whitePawn2Pos: string = "72";
-whitePawn3Pos: string = "73";
-whitePawn4Pos: string = "74";
-whitePawn5Pos: string = "75";
-whitePawn6Pos: string = "76";
-whitePawn7Pos: string = "77";
-whitePawn8Pos: string = "78";
-
 public targetFieldId: string = "";
 public targetPlayer: string = "";
 public isGameOver: boolean = false;
 public currentTurn: string = "black"; //change to white
+public piecesData: chessPiecesData = new chessPiecesData();
 chessMovements: chessMovement = new chessMovement();
 
  onCalled(event: any)
@@ -75,6 +28,12 @@ chessMovements: chessMovement = new chessMovement();
 
    var isTheTileClear = document.getElementById(this.targetFieldId)?.getAttribute('piece') == "";
    var selectedPieceColour = document.getElementById(this.targetFieldId)?.getAttribute('player');
+
+   //service
+    console.log(this.piecesData.piecesData.find(p => p.id == parseInt(this.targetFieldId))?.colour);
+    this.piecesData.piecesData.find(p => p.id == parseInt(this.targetFieldId))!.colour = 'white';
+    console.log(this.piecesData.piecesData.find(p => p.id == parseInt(this.targetFieldId))?.colour);
+   //\service
 
   if(this.currentTurn == "white")
   {
