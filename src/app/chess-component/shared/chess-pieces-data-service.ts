@@ -181,6 +181,38 @@ export class chessPiecesDataService
        }
     }
 
+    addWhitePieceOnTile(tileId: number, latestPieceType: string){
+        this.piecesData.find(p => p.id == tileId)!.colour = "white";
+
+        switch(latestPieceType)
+       {
+          case 'rook':
+            this.piecesData.find(p => p.id == tileId)!.piece = "rook";
+            this.piecesData.find(p => p.id == tileId)!.pieceType = ChessFigures.WhiteRook;
+            break;
+          case 'pawn':
+            this.piecesData.find(p => p.id == tileId)!.piece = "pawn";
+            this.piecesData.find(p => p.id == tileId)!.pieceType = ChessFigures.WhitePawn;
+            break;
+          case 'horse':
+            this.piecesData.find(p => p.id == tileId)!.piece = "horse";
+            this.piecesData.find(p => p.id == tileId)!.pieceType = ChessFigures.WhiteHorse;
+            break;
+          case 'bishop':
+            this.piecesData.find(p => p.id == tileId)!.piece = "bishop";
+            this.piecesData.find(p => p.id == tileId)!.pieceType = ChessFigures.WhiteBishop;
+            break;
+          case 'queen':
+            this.piecesData.find(p => p.id == tileId)!.piece = "queen";
+            this.piecesData.find(p => p.id == tileId)!.pieceType = ChessFigures.WhiteQueen;
+            break;
+          case 'king':
+            this.piecesData.find(p => p.id == tileId)!.piece = "king";
+            this.piecesData.find(p => p.id == tileId)!.pieceType = ChessFigures.WhiteKing;
+            break;
+       }
+    }
+
     returnPiece(id: number){
         var piece = this.piecesData.find(p => p.id == id)?.pieceType;
         return piece;

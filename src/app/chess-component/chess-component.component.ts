@@ -14,8 +14,8 @@ export class ChessComponentComponent implements OnInit
 public targetFieldId: string = "";
 public targetPlayer: string = "";
 public isGameOver: boolean = false;
-public currentTurn: string = "black"; //change to white
-private chessPieces: chessPiece[] = [];
+public currentTurn: string = "white"; //change to white
+//private chessPieces: chessPiece[] = [];
 
  onReset()
  {
@@ -23,9 +23,7 @@ private chessPieces: chessPiece[] = [];
 
  constructor(private piecesMovementService: piecesMovementService, private chessPiecesDataService: chessPiecesDataService) { }
 
- ngOnInit(): void 
- {
-   this.chessPieces = this.chessPiecesDataService.piecesData;
+ ngOnInit(): void {
  }
 
  onCalled(event: any)
@@ -35,12 +33,6 @@ private chessPieces: chessPiece[] = [];
    var chessPiece = this.chessPiecesDataService.seletedPieceType(parseInt(this.targetFieldId));
 
    var potentialMoveElements = document.getElementsByClassName("potentialMove");
-
-   //service
-    // console.log(this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(this.targetFieldId))?.colour);
-    // this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(this.targetFieldId))!.colour = 'white';
-    // console.log(this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(this.targetFieldId))?.colour);
-   //\service
 
   if(this.currentTurn == "white")
   {
@@ -55,15 +47,27 @@ private chessPieces: chessPiece[] = [];
           potentialMoveElements[i].classList.remove("potentialMove");
         }
 
-        /*switch(chessPiece)
+        switch(chessPiece)
         {
           case "pawn":
-            this.blackPawnMovement(this.targetFieldId);
+            this.piecesMovementService.whitePawnMovement(this.targetFieldId);
             break;
           case "rook":
-            this.blackRookMovement(this.targetFieldId);
+            this.piecesMovementService.whiteRookMovement(this.targetFieldId);
             break;
-        }*/
+          case "horse":
+            this.piecesMovementService.whiteHorseMovement(this.targetFieldId);
+            break;
+          case "bishop":
+            this.piecesMovementService.whiteBishopMovement(this.targetFieldId);
+            break;
+          case "queen":
+            this.piecesMovementService.whiteQueenMovement(this.targetFieldId);
+            break;
+          case "king":
+            this.piecesMovementService.whiteKingMovement(this.targetFieldId);
+            break;
+        }
       }
     }
   else if(this.currentTurn == "black")
@@ -119,7 +123,7 @@ private chessPieces: chessPiece[] = [];
         }
         else if(this.piecesMovementService.latestPieceColour == 'white')
         {
-
+          this.chessPiecesDataService.addWhitePieceOnTile(parseInt(id), this.piecesMovementService.latestPieceType);
         }
         this.chessPiecesDataService.removePieceFromTile(parseInt(this.piecesMovementService.latestFieldId));
 
