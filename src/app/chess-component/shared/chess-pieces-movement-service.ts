@@ -1,8 +1,16 @@
-export class chessMovement
+import { Injectable } from "@angular/core";
+import { chessPiecesDataService } from "./chess-pieces-data-service";
+
+@Injectable()
+export class piecesMovementService
 {
     public latestFieldId: string = "";
     public latestPieceType: string = "";
     public latestPieceColour: string = "";
+
+    constructor(private chessPiecesDataService: chessPiecesDataService){
+
+    }
 
     //shows potential move and marks it
     public blackPawnMovement(id: string)
@@ -33,27 +41,31 @@ export class chessMovement
         //Pawn movement after its first move -> pawn is only able to move upwards and if there is enemy piece upRight and if its king it will go in check()
         
         //Checks if the upward tile is clear from black or white piece and marks the tile as a potentialMove if it is clear
-        if(this.isClear(posAfterOneMoveUpwards))
+        if(this.chessPiecesDataService.isTileClear(parseInt(posAfterOneMoveUpwards)))
         {
+            this.chessPiecesDataService.addPotentialMove(parseInt(id),posAfterOneMoveUpwards);
             document.getElementById(posAfterOneMoveUpwards)?.classList.add("potentialMove");
         }
 
         //Cheks if two tiles upward the tile is clear from black or white piece and if its the first move of the pawn(on col 2) - mark as a potentialMove
-        if(this.isClear(posAfterTwoMovesUpwards) && colPos == 2)
+        if(this.chessPiecesDataService.isTileClear(parseInt(posAfterTwoMovesUpwards)) && colPos == 2)
         {
+            this.chessPiecesDataService.addPotentialMove(parseInt(id), posAfterTwoMovesUpwards);
             document.getElementById(posAfterTwoMovesUpwards)?.classList.add("potentialMove");
         }
 
         //checks if there is enemy on the right side 1 column upwards
-        if(this.isWhite(posAfterRightEnemyMove))
+        if(this.chessPiecesDataService.isThePieceWhite(parseInt(posAfterRightEnemyMove)))
         {
+            this.chessPiecesDataService.addPotentialMove(parseInt(id), posAfterRightEnemyMove);
             document.getElementById(posAfterRightEnemyMove)?.classList.add("potentialMove");
         }
 
         //checks if there is enemy on the left side 1 column upwards
-        if(this.isWhite(posAfterLeftEnemyMove))
+        if(this.chessPiecesDataService.isThePieceWhite(parseInt(posAfterLeftEnemyMove)))
         {
             document.getElementById(posAfterLeftEnemyMove)?.classList.add("potentialMove");
+            this.chessPiecesDataService.addPotentialMove(parseInt(id), posAfterLeftEnemyMove);
         }
 
         //if(colPos == 2 && this.isClear(id))
@@ -78,20 +90,25 @@ export class chessMovement
             if(!noMoreUpwardMoves)
             {
                 var currentIterationId = c.toString() + rowPos.toString();
-                if(this.isBlack(currentIterationId))
+                if(this.chessPiecesDataService.isThePieceBlack(parseInt(currentIterationId)))
                 {
+                    console.log(this.chessPiecesDataService.isThePieceBlack(parseInt(currentIterationId)));
                     noMoreUpwardMoves = true;
                 }
                 else
                 {
-                    if(!this.isWhite(currentIterationId))
+                    if(!this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationId)))
                     {
+                        console.log("asd 1");
                         document.getElementById(currentIterationId)?.classList.add("potentialMove");
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationId);
                     }
                     else
                     {
+                        console.log("asd 2")
                         noMoreUpwardMoves = true;
                         document.getElementById(currentIterationId)?.classList.add("potentialMove");
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationId);
                     }
                 }
             }
@@ -106,19 +123,21 @@ export class chessMovement
             if(!noMoreDownwardMoves)
             {
                 var currentIterationId1 = c1.toString() + rowPos.toString();
-                if(this.isBlack(currentIterationId1))
+                if(this.chessPiecesDataService.isThePieceBlack(parseInt(currentIterationId1)))
                 {
                     noMoreDownwardMoves = true;
                 }
                 else
                 {
-                    if(!this.isWhite(currentIterationId1))
+                    if(!this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationId1)))
                     {
                         document.getElementById(currentIterationId1)?.classList.add("potentialMove");
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationId1);
                     }
                     else
                     {
                         document.getElementById(currentIterationId1)?.classList.add("potentialMove");
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationId1);
                         noMoreDownwardMoves = true;
                     }
                 }
@@ -135,19 +154,21 @@ export class chessMovement
             if(!noMoreRightMoves)
             {
                 var currentIterationId2 = colPos.toString() + r.toString();
-                if(this.isBlack(currentIterationId2))
+                if(this.chessPiecesDataService.isThePieceBlack(parseInt(currentIterationId2)))
                 {
                     noMoreRightMoves = true;
                 }
                 else
                 {
-                    if(!this.isWhite(currentIterationId2))
+                    if(!this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationId2)))
                     {
                         document.getElementById(currentIterationId2)?.classList.add("potentialMove");
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationId2);
                     }
                     else
                     {
                         document.getElementById(currentIterationId2)?.classList.add("potentialMove");
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationId2);
                         noMoreRightMoves = true;
                     }
                 }
@@ -164,19 +185,21 @@ export class chessMovement
             if(!noMoreLeftMoves)
             {
                 var currentIterationId3 = colPos.toString() + r1.toString();
-                if(this.isBlack(currentIterationId3))
+                if(this.chessPiecesDataService.isThePieceBlack(parseInt(currentIterationId3)))
                 {
                     noMoreLeftMoves = true;
                 }
                 else
                 {
-                    if(!this.isWhite(currentIterationId3))
+                    if(!this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationId3)))
                     {
                         document.getElementById(currentIterationId3)?.classList.add("potentialMove");
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationId3);
                     }
                     else
                     {
                         document.getElementById(currentIterationId3)?.classList.add("potentialMove");
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationId3);
                         noMoreLeftMoves = true;
                     }
                 }
@@ -211,9 +234,10 @@ export class chessMovement
         for(var i = 0; i < horseMovesArr.length; i++)
         {
             console.log(horseMovesArr[i]);
-            if(!this.isBlack(horseMovesArr[i]))
+            if(!this.chessPiecesDataService.isThePieceBlack(parseInt(horseMovesArr[i])))
             {
                 document.getElementById(horseMovesArr[i])?.classList.add("potentialMove");
+                this.chessPiecesDataService.addPotentialMove(parseInt(id), horseMovesArr[i]);
             }
         }
     }
@@ -241,19 +265,21 @@ export class chessMovement
             if(!noMoreUL)
             {
                 var currentIterationBid = c.toString() + r.toString();
-                if(this.isBlack(currentIterationBid))
+                if(this.chessPiecesDataService.isThePieceBlack(parseInt(currentIterationBid)))
                 {
                     noMoreUL = true;
                 }
                 else
                 {
-                    if(!this.isWhite(currentIterationBid))
+                    if(!this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationBid)))
                     {
                         document.getElementById(currentIterationBid)?.classList.add("potentialMove");
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationBid);
                     }
                     else
                     {
                         document.getElementById(currentIterationBid)?.classList.add("potentialMove");
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationBid);
                         noMoreUL = true;
                     }
                 }
@@ -275,19 +301,21 @@ export class chessMovement
             if(!noMoreUR)
             {
                 var currentIterationBid = c.toString() + r.toString();
-                if(this.isBlack(currentIterationBid))
+                if(this.chessPiecesDataService.isThePieceBlack(parseInt(currentIterationBid)))
                 {
                     noMoreUR = true;
                 }
                 else
                 {
-                    if(!this.isWhite(currentIterationBid))
+                    if(!this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationBid)))
                     {
                         document.getElementById(currentIterationBid)?.classList.add("potentialMove");
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationBid);
                     }
                     else
                     {
                         document.getElementById(currentIterationBid)?.classList.add("potentialMove");
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationBid);
                         noMoreUR = true;
                     }
                 }
@@ -309,19 +337,21 @@ export class chessMovement
             if(!noMoreDL)
             {
                 var currentIterationBid = c.toString() + r.toString();
-                if(this.isBlack(currentIterationBid))
+                if(this.chessPiecesDataService.isThePieceBlack(parseInt(currentIterationBid)))
                 {
                     noMoreDL = true;
                 }
                 else
                 {
-                    if(!this.isWhite(currentIterationBid))
+                    if(!this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationBid)))
                     {
                         document.getElementById(currentIterationBid)?.classList.add("potentialMove");
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationBid);
                     }
                     else
                     {
                         document.getElementById(currentIterationBid)?.classList.add("potentialMove");
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationBid);
                         noMoreDL = true;
                     }
                 }
@@ -343,19 +373,21 @@ export class chessMovement
             if(!noMoreDR)
             {
                 var currentIterationBid = c.toString() + r.toString();
-                if(this.isBlack(currentIterationBid))
+                if(this.chessPiecesDataService.isThePieceBlack(parseInt(currentIterationBid)))
                 {
                     noMoreDR = true;
                 }
                 else
                 {
-                    if(!this.isWhite(currentIterationBid))
+                    if(!this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationBid)))
                     {
                         document.getElementById(currentIterationBid)?.classList.add("potentialMove");
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationBid);
                     }
                     else
                     {
                         document.getElementById(currentIterationBid)?.classList.add("potentialMove");
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationBid);
                         noMoreDR = true;
                     }
                 }
@@ -398,9 +430,10 @@ export class chessMovement
 
         for(var s = 0; s < kingMovesArr.length; s++)
         {
-            if(!this.isBlack(kingMovesArr[s]))
+            if(!this.chessPiecesDataService.isThePieceBlack(parseInt(kingMovesArr[s])))
             {
                 document.getElementById(kingMovesArr[s])?.classList.add("potentialMove");
+                this.chessPiecesDataService.addPotentialMove(parseInt(id), kingMovesArr[s]);
             }
         }
     }
@@ -416,44 +449,4 @@ export class chessMovement
         this.blackRookMovement(id);
         this.latestPieceType = 'queen';
     }
-
-    isClear(id: string)
-    {
-        var isTheTileClear = document.getElementById(id)?.getAttribute('player') == "";
-        if(isTheTileClear){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-
- //checks if the piece on the selected tile is white
-    isWhite(id: string)
-    {
-        var IspieceColorOnTileIdWhite = document.getElementById(id)?.getAttribute('player') == "white";
-        if(IspieceColorOnTileIdWhite)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
- //checks if the piece on the selected tile is black
-    isBlack(id: string)
-    {
-        var IspieceColorOnTileIdBlack = document.getElementById(id)?.getAttribute('player') == "black";
-        if(IspieceColorOnTileIdBlack)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
 }

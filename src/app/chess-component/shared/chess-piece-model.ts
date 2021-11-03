@@ -4,6 +4,7 @@ export interface chessPiece
 {
     id: number;
     pieceType: ChessFigures;
+    piece: string;
     colour: string;
     potentialMoves: string[];
 }
