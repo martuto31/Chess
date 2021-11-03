@@ -32,7 +32,6 @@ private chessPieces: chessPiece[] = [];
  {
    var target = event.target;
    this.targetFieldId = target.id;
-   this.targetPlayer = target.attributes.player.value;
    var chessPiece = this.chessPiecesDataService.seletedPieceType(parseInt(this.targetFieldId));
 
    var potentialMoveElements = document.getElementsByClassName("potentialMove");
