@@ -120,10 +120,12 @@ public currentTurn: string = "white"; //change to white
         if(this.piecesMovementService.latestPieceColour == 'black')
         {
           this.chessPiecesDataService.addBlackPieceOnTile(parseInt(id), this.piecesMovementService.latestPieceType);
+          this.currentTurn = "white";
         }
         else if(this.piecesMovementService.latestPieceColour == 'white')
         {
           this.chessPiecesDataService.addWhitePieceOnTile(parseInt(id), this.piecesMovementService.latestPieceType);
+          this.currentTurn = "black";
         }
         this.chessPiecesDataService.removePieceFromTile(parseInt(this.piecesMovementService.latestFieldId));
 
