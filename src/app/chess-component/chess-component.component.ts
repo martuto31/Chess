@@ -47,29 +47,28 @@ public currentTurn: string = "white";
           //remove all potential moves inside the program
         }
 
+        this.piecesMovementService.removeAllPotentialMoves();
         this.piecesMovementService.checkAllPotentialMoves();
-
-        var arrayOfPotentialMoves: string[];
 
         switch(chessPiece)
         {
           case "pawn":
-            this.piecesMovementService.whitePawnMovement(this.targetFieldId);
+            this.piecesMovementService.showAllPotentialMoves(parseInt(this.targetFieldId), "white", "pawn");
             break;
           case "rook":
-            this.piecesMovementService.whiteRookMovement(this.targetFieldId);
+            this.piecesMovementService.showAllPotentialMoves(parseInt(this.targetFieldId), "white", "rook");
             break;
           case "horse":
-            this.piecesMovementService.whiteHorseMovement(this.targetFieldId);
+            this.piecesMovementService.showAllPotentialMoves(parseInt(this.targetFieldId), "white", "horse");
             break;
           case "bishop":
-            this.piecesMovementService.whiteBishopMovement(this.targetFieldId);
+            this.piecesMovementService.showAllPotentialMoves(parseInt(this.targetFieldId), "white", "bishop");
             break;
           case "queen":
-            this.piecesMovementService.whiteQueenMovement(this.targetFieldId);
+            this.piecesMovementService.showAllPotentialMoves(parseInt(this.targetFieldId), "white", "queen");
             break;
           case "king":
-            this.piecesMovementService.whiteKingMovement(this.targetFieldId);
+            this.piecesMovementService.showAllPotentialMoves(parseInt(this.targetFieldId), "white", "king");
             break;
         }
       }
@@ -87,6 +86,7 @@ public currentTurn: string = "white";
         potentialMoveElements[0].classList.remove("potentialMove");
       }
 
+      this.piecesMovementService.removeAllPotentialMoves();
       this.piecesMovementService.checkAllPotentialMoves();
 
       switch(chessPiece)
@@ -95,19 +95,19 @@ public currentTurn: string = "white";
           this.piecesMovementService.showAllPotentialMoves(parseInt(this.targetFieldId), "black", "pawn");
           break;
         case "rook":
-          this.piecesMovementService.blackRookMovement(this.targetFieldId);
+          this.piecesMovementService.showAllPotentialMoves(parseInt(this.targetFieldId), "black", "rook");
           break;
         case "horse":
-          this.piecesMovementService.blackHorseMovement(this.targetFieldId);
+          this.piecesMovementService.showAllPotentialMoves(parseInt(this.targetFieldId), "black", "horse");
           break;
         case "bishop":
-          this.piecesMovementService.blackBishopMovement(this.targetFieldId);
+          this.piecesMovementService.showAllPotentialMoves(parseInt(this.targetFieldId), "black", "bishop");
           break;
         case "queen":
-          this.piecesMovementService.blackQueenMovement(this.targetFieldId);
+          this.piecesMovementService.showAllPotentialMoves(parseInt(this.targetFieldId), "black", "queen");
           break;
         case "king":
-          this.piecesMovementService.blackKingMovement(this.targetFieldId);
+          this.piecesMovementService.showAllPotentialMoves(parseInt(this.targetFieldId), "black", "king");
           break;
       }
     }
