@@ -12,15 +12,39 @@ export class piecesMovementService
 
     }
 
-    //shows potential move and marks it
+    checkAllPotentialMoves(){
+        this.chessPiecesDataService.piecesData.forEach(element => {
+            if(element.colour === "black")
+            {
+                switch(element.piece)
+                {
+                    case "pawn":
+                        this.blackPawnMovement(element.id.toString());
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+    }
+
+    showAllPotentialMoves(id: number, latestColour: string, latestPiece: string){
+        this.latestPieceColour = latestColour;
+        this.latestPieceType = latestPiece;
+        this.latestFieldId = id.toString();
+        var arrayOfPotentialMoves: string[];
+        arrayOfPotentialMoves = this.chessPiecesDataService.piecesData.find(p => p.id == id)!.potentialMoves;
+        console.log("array: "+ arrayOfPotentialMoves);
+        for(var i = 0; i < arrayOfPotentialMoves.length; i++)
+        {
+            document.getElementById(arrayOfPotentialMoves[i])?.classList.add("potentialMove");
+        }
+    }
+
     public blackPawnMovement(id: string)
     {
         var colPos = parseInt(id[0]);
         var rowPos = parseInt(id[1]);
-        this.latestFieldId = id;
-        this.latestPieceType = 'pawn';
-        this.latestPieceColour = 'black';
-
 
         var posAfterOneMoveUpwards: string = (++colPos).toString() + rowPos.toString();
         var colPos = parseInt(id[0]);
@@ -44,27 +68,27 @@ export class piecesMovementService
         if(this.chessPiecesDataService.isTileClear(parseInt(posAfterOneMoveUpwards)))
         {
             this.chessPiecesDataService.addPotentialMove(parseInt(id),posAfterOneMoveUpwards);
-            document.getElementById(posAfterOneMoveUpwards)?.classList.add("potentialMove");
+            //document.getElementById(posAfterOneMoveUpwards)?.classList.add("potentialMove");
         }
 
         //Cheks if two tiles upward the tile is clear from black or white piece and if its the first move of the pawn(on col 2) - mark as a potentialMove
         if(this.chessPiecesDataService.isTileClear(parseInt(posAfterTwoMovesUpwards)) && colPos == 2)
         {
             this.chessPiecesDataService.addPotentialMove(parseInt(id), posAfterTwoMovesUpwards);
-            document.getElementById(posAfterTwoMovesUpwards)?.classList.add("potentialMove");
+            //document.getElementById(posAfterTwoMovesUpwards)?.classList.add("potentialMove");
         }
 
         //checks if there is enemy on the right side 1 column upwards
         if(this.chessPiecesDataService.isThePieceWhite(parseInt(posAfterRightEnemyMove)))
         {
             this.chessPiecesDataService.addPotentialMove(parseInt(id), posAfterRightEnemyMove);
-            document.getElementById(posAfterRightEnemyMove)?.classList.add("potentialMove");
+            //document.getElementById(posAfterRightEnemyMove)?.classList.add("potentialMove");
         }
 
         //checks if there is enemy on the left side 1 column upwards
         if(this.chessPiecesDataService.isThePieceWhite(parseInt(posAfterLeftEnemyMove)))
         {
-            document.getElementById(posAfterLeftEnemyMove)?.classList.add("potentialMove");
+            //document.getElementById(posAfterLeftEnemyMove)?.classList.add("potentialMove");
             this.chessPiecesDataService.addPotentialMove(parseInt(id), posAfterLeftEnemyMove);
         }
 
@@ -92,20 +116,17 @@ export class piecesMovementService
                 var currentIterationId = c.toString() + rowPos.toString();
                 if(this.chessPiecesDataService.isThePieceBlack(parseInt(currentIterationId)))
                 {
-                    console.log(this.chessPiecesDataService.isThePieceBlack(parseInt(currentIterationId)));
                     noMoreUpwardMoves = true;
                 }
                 else
                 {
                     if(!this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationId)))
                     {
-                        console.log("asd 1");
                         document.getElementById(currentIterationId)?.classList.add("potentialMove");
                         this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationId);
                     }
                     else
                     {
-                        console.log("asd 2")
                         noMoreUpwardMoves = true;
                         document.getElementById(currentIterationId)?.classList.add("potentialMove");
                         this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationId);
@@ -233,7 +254,6 @@ export class piecesMovementService
         
         for(var i = 0; i < horseMovesArr.length; i++)
         {
-            console.log(horseMovesArr[i]);
             if(!this.chessPiecesDataService.isThePieceBlack(parseInt(horseMovesArr[i])))
             {
                 document.getElementById(horseMovesArr[i])?.classList.add("potentialMove");
@@ -529,20 +549,17 @@ export class piecesMovementService
                 var currentIterationId = c.toString() + rowPos.toString();
                 if(this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationId)))
                 {
-                    console.log(this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationId)));
                     noMoreUpwardMoves = true;
                 }
                 else
                 {
                     if(!this.chessPiecesDataService.isThePieceBlack(parseInt(currentIterationId)))
                     {
-                        console.log("asd 1");
                         document.getElementById(currentIterationId)?.classList.add("potentialMove");
                         this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationId);
                     }
                     else
                     {
-                        console.log("asd 2")
                         noMoreUpwardMoves = true;
                         document.getElementById(currentIterationId)?.classList.add("potentialMove");
                         this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationId);
@@ -885,5 +902,13 @@ export class piecesMovementService
         this.latestPieceType = 'queen';
         this.whiteRookMovement(id);
         this.latestPieceType = 'queen';
+    }
+
+    public allWhitePotentialMovements(){
+
+    }
+
+    public allBlackPotentialMovements(){
+
     }
 }

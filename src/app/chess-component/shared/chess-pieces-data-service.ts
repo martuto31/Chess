@@ -1,4 +1,5 @@
 import { identifierModuleUrl } from "@angular/compiler";
+import { Injectable } from "@angular/core";
 import { ChessFigures } from "./chess-figures";
 import { chessPiece} from "./chess-piece-model";
 
@@ -104,7 +105,6 @@ export class chessPiecesDataService
     }
     isThePieceWhite(id: number)
     {
-        console.log(this.piecesData.find(p => p.id == id)?.pieceType);
         if(this.piecesData.find(p => p.id == id)?.colour === "white")
         {
             return true;
@@ -116,7 +116,6 @@ export class chessPiecesDataService
     }
     isThePieceBlack(id: number)
     {
-        console.log(this.piecesData.find(p => p.id == id)?.pieceType);
         if(this.piecesData.find(p => p.id == id)?.colour === "black")
         {
             return true;
@@ -217,5 +216,4 @@ export class chessPiecesDataService
         var piece = this.piecesData.find(p => p.id == id)?.pieceType;
         return piece;
     }
-
 }

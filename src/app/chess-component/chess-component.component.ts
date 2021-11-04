@@ -14,8 +14,7 @@ export class ChessComponentComponent implements OnInit
 public targetFieldId: string = "";
 public targetPlayer: string = "";
 public isGameOver: boolean = false;
-public currentTurn: string = "white"; //change to white
-//private chessPieces: chessPiece[] = [];
+public currentTurn: string = "white";
 
  onReset()
  {
@@ -45,7 +44,12 @@ public currentTurn: string = "white"; //change to white
         for(var i = 0; i < potentialMoveElements.length; i++)
         {
           potentialMoveElements[i].classList.remove("potentialMove");
+          //remove all potential moves inside the program
         }
+
+        this.piecesMovementService.checkAllPotentialMoves();
+
+        var arrayOfPotentialMoves: string[];
 
         switch(chessPiece)
         {
@@ -83,10 +87,12 @@ public currentTurn: string = "white"; //change to white
         potentialMoveElements[0].classList.remove("potentialMove");
       }
 
+      this.piecesMovementService.checkAllPotentialMoves();
+
       switch(chessPiece)
       {
         case "pawn":
-          this.piecesMovementService.blackPawnMovement(this.targetFieldId);
+          this.piecesMovementService.showAllPotentialMoves(parseInt(this.targetFieldId), "black", "pawn");
           break;
         case "rook":
           this.piecesMovementService.blackRookMovement(this.targetFieldId);
@@ -104,17 +110,15 @@ public currentTurn: string = "white"; //change to white
           this.piecesMovementService.blackKingMovement(this.targetFieldId);
           break;
       }
-   }
+    }
 
-  } //+ if the tile is clear or if there is piece of the opposite colour; else if the piece is current colour
+  }
 }
- //checks if there is a player on the the selected tile
+
   tryMovePiece(id: string)
   {
       var isPotentialMove = this.chessPiecesDataService.isPotentialMove(parseInt(this.piecesMovementService.latestFieldId), id);
-      //checks if there is a potentialMove class and if there is => checks which is the latest piece color ->
-      //and changes the new tile 'player' attribute to black or white, and changes the type of the new tile ->
-      //'piece' attribute to the latestSelected piece
+
       if(id == this.targetFieldId && isPotentialMove)
       {
         if(this.piecesMovementService.latestPieceColour == 'black')
@@ -128,9 +132,6 @@ public currentTurn: string = "white"; //change to white
           this.currentTurn = "black";
         }
         this.chessPiecesDataService.removePieceFromTile(parseInt(this.piecesMovementService.latestFieldId));
-
-        //current turn = the opposite of latest turn
-        console.log("we moved it!")
       }
       var potentialMoveElements = document.getElementsByClassName("potentialMove");
 
