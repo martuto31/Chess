@@ -35,16 +35,18 @@ public currentTurn: string = "white";
 
   if(this.currentTurn == "white")
   {
+      this.piecesMovementService.isInCheck("white");
+      this.piecesMovementService.isInCheck("black");
+      console.log(this.piecesMovementService.inCheck);
       if(this.chessPiecesDataService.isTileClear(parseInt(this.targetFieldId)) || this.chessPiecesDataService.selectedPieceColour(parseInt(this.targetFieldId)) === "black")
       {
         this.tryMovePiece(this.targetFieldId);
       }
       else if(this.chessPiecesDataService.selectedPieceColour(parseInt(this.targetFieldId)) === "white")
       {
-        for(var i = 0; i < potentialMoveElements.length; i++)
+        while(potentialMoveElements.length > 0)
         {
-          potentialMoveElements[i].classList.remove("potentialMove");
-          //remove all potential moves inside the program
+          potentialMoveElements[0].classList.remove("potentialMove");
         }
 
         this.piecesMovementService.removeAllPotentialMoves();
@@ -75,6 +77,9 @@ public currentTurn: string = "white";
     }
   else if(this.currentTurn == "black")
   {
+    this.piecesMovementService.isInCheck("white");
+    this.piecesMovementService.isInCheck("black");
+    console.log(this.piecesMovementService.inCheck);
     if(this.chessPiecesDataService.isTileClear(parseInt(this.targetFieldId)) || this.chessPiecesDataService.selectedPieceColour(parseInt(this.targetFieldId)) === "white")
     {
       this.tryMovePiece(this.targetFieldId);
@@ -132,7 +137,10 @@ public currentTurn: string = "white";
           this.currentTurn = "black";
         }
         this.chessPiecesDataService.removePieceFromTile(parseInt(this.piecesMovementService.latestFieldId));
+        this.piecesMovementService.inCheck = false;
+        this.piecesMovementService.figurePlacingCheckId = "";
       }
+      this.piecesMovementService.removeAllPotentialMoves();
       var potentialMoveElements = document.getElementsByClassName("potentialMove");
 
       while(potentialMoveElements.length > 0)

@@ -79,6 +79,11 @@ export class chessPiecesDataService
         {id: 87, pieceType: ChessFigures.WhiteHorse, piece: "horse", colour: "white", potentialMoves: []},
         {id: 88, pieceType: ChessFigures.WhiteRook, piece: "rook", colour: "white", potentialMoves: []},
     ]
+    deletePotentialMove(id: number, potentialMove: string){
+      var selectedPiece = this.piecesData.find(p => p.id == id)
+      var indexOfPotentialMove = selectedPiece!.potentialMoves.indexOf(potentialMove);
+      selectedPiece?.potentialMoves.splice(indexOfPotentialMove, 1);
+    }
 
     addPotentialMove(id: number, potentialMove: string){
         var selectedPiece = this.piecesData.find(p => p.id == id);

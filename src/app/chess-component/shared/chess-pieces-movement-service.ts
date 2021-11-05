@@ -7,9 +7,35 @@ export class piecesMovementService
     public latestFieldId: string = "";
     public latestPieceType: string = "";
     public latestPieceColour: string = "";
+    public inCheck: boolean = false;
+    public figurePlacingCheckId: string = "";
 
     constructor(private chessPiecesDataService: chessPiecesDataService){
 
+    }
+
+    isInCheck(kingColour: string){
+        if(kingColour === "white")
+        {
+            var kingPos = this.chessPiecesDataService.piecesData.find(p => (p.piece === "king") &&(p.colour === "white"))!.id;
+            this.chessPiecesDataService.piecesData.forEach(element => {
+                if(element.potentialMoves.includes(kingPos!.toString()))
+                {
+                    this.inCheck = true;
+                    this.figurePlacingCheckId = element.id.toString();
+                }
+            });
+        }
+        else if(kingColour === "black")
+        {
+            var kingPos = this.chessPiecesDataService.piecesData.find(p => (p.piece === "king") &&(p.colour === "black"))!.id;
+            this.chessPiecesDataService.piecesData.forEach(element => {
+                if(element.potentialMoves.includes(kingPos!.toString()))
+                {
+                    this.inCheck = true;
+                }
+            });
+        }
     }
 
     checkAllPotentialMoves(){
@@ -84,6 +110,23 @@ export class piecesMovementService
         for(var i = 0; i < arrayOfPotentialMoves.length; i++)
         {
             document.getElementById(arrayOfPotentialMoves[i])?.classList.add("potentialMove");
+        }
+    }
+
+    //checks if the king is in check after moving figure of the same colour as the king
+    isMyKingInCheckAfterMyMove(pieceId: string, potentialMoveId: string, pieceColour: string){
+        this.chessPiecesDataService.addPotentialMove(parseInt(pieceId), potentialMoveId);
+        this.isInCheck(pieceColour);
+        if(this.inCheck)
+        {
+            this.inCheck = false;
+            this.figurePlacingCheckId = "";
+            this.chessPiecesDataService.deletePotentialMove(parseInt(pieceId), potentialMoveId);
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
