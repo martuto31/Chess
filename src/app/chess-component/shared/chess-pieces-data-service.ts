@@ -92,6 +92,11 @@ export class chessPiecesDataService
         //if potentialMove is not already added, add
     }
 
+    deleteAllColourPotentialMoves(id: number, removeColour: string){
+      var selectedPiecePotentialMoves = this.piecesData.find(p => p.id == id)?.potentialMoves.length;
+      this.piecesData.find(p => p.id == id && p.colour == removeColour)?.potentialMoves.splice(0, selectedPiecePotentialMoves);
+    }
+
     deleteAllPotentialMoves(id: number){
         var selectedPiecePotentialMoves = this.piecesData.find(p => p.id == id)?.potentialMoves.length;
         this.piecesData.find(p => p.id == id)?.potentialMoves.splice(0, selectedPiecePotentialMoves);
