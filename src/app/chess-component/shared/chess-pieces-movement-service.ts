@@ -9,19 +9,18 @@ export class piecesMovementService
     public latestPieceColour: string = "";
     public inCheck: boolean = false;
     public figurePlacingCheckId: string = "";
+    private isQueenMovement: boolean = false;
 
     constructor(private chessPiecesDataService: chessPiecesDataService){
-
     }
 
-    isInCheck(kingColour: string){
+    /*isInCheck(kingColour: string){
         if(kingColour === "white")
         {
             var whiteKingPos = this.chessPiecesDataService.piecesData.find(p => (p.piece === "king") &&(p.colour === "white"))!.id;
             this.chessPiecesDataService.piecesData.forEach(element => {
                 if(element.colour === "black" && element.potentialMoves.includes(whiteKingPos!.toString()))
                 {
-                    console.log("its trueeew");
                     this.inCheck = true;
                     this.figurePlacingCheckId = element.id.toString();
                 }
@@ -33,20 +32,32 @@ export class piecesMovementService
             this.chessPiecesDataService.piecesData.forEach(element => {
                 if(element.colour === "white" && element.potentialMoves.includes(blackKingPos!.toString()))
                 {
-                    
-                    console.log("its trueeeb");
                     this.inCheck = true;
                     this.figurePlacingCheckId = element.id.toString();
                 }
             });
         }
-    }
+    }*/
 
     isMyKingInCheckAfterMyMove(pieceId: string, potentialMoveId: string, pieceColour: string, piece: string,){
+        //clearing the tile of the selected piece to check if the king would be in check after move of the selected piece
         this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(pieceId))!.colour = "";
         this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(pieceId))!.piece = "";
+
+        var pieceOntoPotentialMove: string = this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(potentialMoveId))!.piece;
+        var colourOntoPotentialMove: string = this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(potentialMoveId))!.colour;
+        console.log(pieceOntoPotentialMove);
+        var noPieceOntoPotentialMove: boolean = false;
+        //simulating a move and checking if the King still would be in check after making a move
+        if(pieceOntoPotentialMove === "")
+        {
+            noPieceOntoPotentialMove = true;
+        }
+        this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(potentialMoveId))!.colour = pieceColour;
+        this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(potentialMoveId))!.piece = piece;
+
         var isInCheckAfterMove: boolean = false;
-        console.log("removed piece: " + this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(pieceId))?.piece);
+
         if(pieceColour === "white")
         {
             var whiteKingPos = this.chessPiecesDataService.piecesData.find(p => (p.piece === "king") &&(p.colour === "white"))!.id;
@@ -55,12 +66,23 @@ export class piecesMovementService
             this.chessPiecesDataService.piecesData.forEach(element => {
                 if(element.colour === "black" && element.potentialMoves.includes(whiteKingPos.toString()))
                 {
-                    console.log("voala");
                     isInCheckAfterMove = true;
                 }
             });
+            if(noPieceOntoPotentialMove)
+            {
+                this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(potentialMoveId))!.colour = "";
+                this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(potentialMoveId))!.piece = "";
+            }
+            else
+            {
+                this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(potentialMoveId))!.colour = colourOntoPotentialMove;
+                this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(potentialMoveId))!.piece = pieceOntoPotentialMove;
+            }
             this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(pieceId))!.colour = pieceColour;
             this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(pieceId))!.piece = piece;
+            this.removeAllColourPotentialMoves("black");
+            this.checkAllColourPotentialMoves("black");
         }
         else if(pieceColour === "black")
         {
@@ -69,23 +91,27 @@ export class piecesMovementService
             this.removeAllColourPotentialMoves("white");
             this.checkAllColourPotentialMoves("white");
             this.chessPiecesDataService.piecesData.forEach(element => {
-                if(element.colour === "white" && element.piece === "bishop")
-                {
-                    console.log("in if");
-                    for(var i = 0; i < element.potentialMoves.length; i++)
-                    {
-                        console.log(element.potentialMoves[i]);
-                    }
-                }
                 if(element.colour === "white" && element.potentialMoves.includes(blackKingPos.toString()))
                 {
-                    console.log("voala");
+                    console.log("the king is in check from: " + piece);
                     isInCheckAfterMove = true;
                 }
             });
+            if(noPieceOntoPotentialMove)
+            {
+                this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(potentialMoveId))!.colour = "";
+                this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(potentialMoveId))!.piece = "";
+            }
+            else
+            {
+                this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(potentialMoveId))!.colour = colourOntoPotentialMove;
+                this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(potentialMoveId))!.piece = pieceOntoPotentialMove;
+            }
+            this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(pieceId))!.colour = pieceColour;
+            this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(pieceId))!.piece = piece;
+            this.removeAllColourPotentialMoves("white");
+            this.checkAllColourPotentialMoves("white");
         }
-        this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(pieceId))!.colour = pieceColour;
-        this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(pieceId))!.piece = piece;
         return isInCheckAfterMove;
     }
 
@@ -272,7 +298,7 @@ export class piecesMovementService
         //Cheks if two tiles upward the tile is clear from black or white piece and if its the first move of the pawn(on col 2) - mark as a potentialMove
         if(this.chessPiecesDataService.isTileClear(parseInt(posAfterTwoMovesUpwards)) && colPos == 2)
         {
-            if(!this.isMyKingInCheckAfterMyMove(id,posAfterTwoMovesUpwards,"black", "pawn"))
+            if(!this.isMyKingInCheckAfterMyMove(id,posAfterTwoMovesUpwards, "black", "pawn"))
             {
                 this.chessPiecesDataService.addPotentialMove(parseInt(id), posAfterTwoMovesUpwards);
             }
@@ -281,7 +307,7 @@ export class piecesMovementService
         //checks if there is enemy on the right side 1 column upwards
         if(this.chessPiecesDataService.isThePieceWhite(parseInt(posAfterRightEnemyMove)))
         {
-            if(!this.isMyKingInCheckAfterMyMove(id,posAfterRightEnemyMove,"black", "pawn"))
+            if(!this.isMyKingInCheckAfterMyMove(id, posAfterRightEnemyMove, "black", "pawn"))
             {
              this.chessPiecesDataService.addPotentialMove(parseInt(id), posAfterRightEnemyMove);
             }
@@ -290,7 +316,7 @@ export class piecesMovementService
         //checks if there is enemy on the left side 1 column upwards
         if(this.chessPiecesDataService.isThePieceWhite(parseInt(posAfterLeftEnemyMove)))
         {
-            if(!this.isMyKingInCheckAfterMyMove(id,posAfterLeftEnemyMove,"black", "pawn"))
+            if(!this.isMyKingInCheckAfterMyMove(id,posAfterLeftEnemyMove, "black", "pawn"))
             {
                 this.chessPiecesDataService.addPotentialMove(parseInt(id), posAfterLeftEnemyMove);
             }
@@ -301,6 +327,11 @@ export class piecesMovementService
 
     public blackRookMovement(id: string)
     {
+        var currentMovement: string = "rook";
+        if(this.isQueenMovement)
+        {
+            currentMovement = "queen";
+        }
         var colPos = parseInt(id[0]);
         var rowPos = parseInt(id[1]);    
 
@@ -321,11 +352,11 @@ export class piecesMovementService
                 }
                 else
                 {
-                    if(!this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationId)))
+                    if(!this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationId)) && !this.isMyKingInCheckAfterMyMove(id, currentIterationId, "black",currentMovement))
                     {
                         this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationId);
                     }
-                    else
+                    else if(this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationId)) && !this.isMyKingInCheckAfterMyMove(id, currentIterationId, "black",currentMovement))
                     {
                         noMoreUpwardMoves = true;
                         this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationId);
@@ -349,11 +380,11 @@ export class piecesMovementService
                 }
                 else
                 {
-                    if(!this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationId1)))
+                    if(!this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationId1)) && !this.isMyKingInCheckAfterMyMove(id, currentIterationId1, "black", currentMovement))
                     {
                         this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationId1);
                     }
-                    else
+                    else if(this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationId1)) && !this.isMyKingInCheckAfterMyMove(id, currentIterationId1, "black", currentMovement))
                     {
                         this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationId1);
                         noMoreDownwardMoves = true;
@@ -378,11 +409,11 @@ export class piecesMovementService
                 }
                 else
                 {
-                    if(!this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationId2)))
+                    if(!this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationId2)) && !this.isMyKingInCheckAfterMyMove(id, currentIterationId2, "black" ,currentMovement))
                     {
                         this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationId2);
                     }
-                    else
+                    else if(this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationId2)) && !this.isMyKingInCheckAfterMyMove(id, currentIterationId2, "black",currentMovement))
                     {
                         this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationId2);
                         noMoreRightMoves = true;
@@ -407,11 +438,11 @@ export class piecesMovementService
                 }
                 else
                 {
-                    if(!this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationId3)))
+                    if(!this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationId3)) && !this.isMyKingInCheckAfterMyMove(id, currentIterationId3, "black",currentMovement))
                     {
                         this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationId3);
                     }
-                    else
+                    else if(this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationId3)) && !this.isMyKingInCheckAfterMyMove(id, currentIterationId3, "black",currentMovement))
                     {
                         this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationId3);
                         noMoreLeftMoves = true;
@@ -428,6 +459,7 @@ export class piecesMovementService
 
     public blackHorseMovement(id: string)
     {
+        console.log(id);
         var colPos = parseInt(id[0]);
         var rowPos = parseInt(id[1]);
 
@@ -440,19 +472,39 @@ export class piecesMovementService
         var downRightLMove = (colPos-2).toString() + (rowPos+1).toString();
         var downLeftLMove = (colPos-2).toString() + (rowPos-1).toString();
 
+        var filteredHorseMovesArrLenght;
+        var filteredHorseMovesArr: string[] = [];
         var horseMovesArr: string[] = [upLeftLMove,upRightLMove,leftUpLMove,leftDownLMove,rightUpLMove,rightDownLMove,downRightLMove,downLeftLMove];
         
+        //without values outside of chess board boundaries
         for(var i = 0; i < horseMovesArr.length; i++)
         {
-            if(!this.chessPiecesDataService.isThePieceBlack(parseInt(horseMovesArr[i])))
+            var currentPotentialHorseMove = horseMovesArr[i];
+            if(parseInt(currentPotentialHorseMove[0]) > 0 && parseInt(currentPotentialHorseMove[0]) < 9)
             {
-                this.chessPiecesDataService.addPotentialMove(parseInt(id), horseMovesArr[i]);
+                if(parseInt(currentPotentialHorseMove[1]) > 0 && parseInt(currentPotentialHorseMove[1]) < 9)
+                {
+                    filteredHorseMovesArrLenght = filteredHorseMovesArr.unshift(currentPotentialHorseMove);
+                }
+            }
+        }
+
+        for(var i = 0; i < filteredHorseMovesArr.length; i++)
+        {
+            if(!this.chessPiecesDataService.isThePieceBlack(parseInt(filteredHorseMovesArr[i])) && !this.isMyKingInCheckAfterMyMove(id, filteredHorseMovesArr[i],"black","horse"))
+            {
+                this.chessPiecesDataService.addPotentialMove(parseInt(id), filteredHorseMovesArr[i]);
             }
         }
     }
 
     public blackBishopMovement(id: string)
     {
+        var currentMovement: string = "bishop";
+        if(this.isQueenMovement)
+        {
+            currentMovement = "queen";
+        }
         var colPos = parseInt(id[0]);
         var rowPos = parseInt(id[1]);
 
@@ -479,12 +531,18 @@ export class piecesMovementService
                 {
                     if(!this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationBid)))
                     {
-                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationBid);
+                        if(!this.isMyKingInCheckAfterMyMove(id, currentIterationBid, "black", currentMovement))
+                        {
+                            this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationBid);
+                        }
                     }
                     else
                     {
-                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationBid);
-                        noMoreUL = true;
+                        if(!this.isMyKingInCheckAfterMyMove(id, currentIterationBid, "black", currentMovement))
+                        {
+                            this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationBid);
+                            noMoreUL = true;
+                        }
                     }
                 }
             }
@@ -513,12 +571,18 @@ export class piecesMovementService
                 {
                     if(!this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationBid)))
                     {
-                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationBid);
+                        if(!this.isMyKingInCheckAfterMyMove(id, currentIterationBid, "black", currentMovement))
+                        {
+                            this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationBid);
+                        }
                     }
                     else
                     {
-                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationBid);
-                        noMoreUR = true;
+                        if(!this.isMyKingInCheckAfterMyMove(id, currentIterationBid, "black", currentMovement))
+                        {
+                            this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationBid);
+                            noMoreUR = true;
+                        }
                     }
                 }
             }
@@ -547,12 +611,18 @@ export class piecesMovementService
                 {
                     if(!this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationBid)))
                     {
-                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationBid);
+                        if(!this.isMyKingInCheckAfterMyMove(id, currentIterationBid, "black", currentMovement))
+                        {
+                            this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationBid);
+                        }
                     }
                     else
                     {
-                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationBid);
-                        noMoreDL = true;
+                        if(!this.isMyKingInCheckAfterMyMove(id, currentIterationBid, "black", currentMovement))
+                        {
+                            this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationBid);
+                            noMoreDL = true;
+                        }
                     }
                 }
             }
@@ -581,12 +651,18 @@ export class piecesMovementService
                 {
                     if(!this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationBid)))
                     {
-                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationBid);
+                        if(!this.isMyKingInCheckAfterMyMove(id, currentIterationBid, "black", currentMovement))
+                        {
+                            this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationBid);
+                        }
                     }
                     else
                     {
-                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationBid);
-                        noMoreDR = true;
+                        if(!this.isMyKingInCheckAfterMyMove(id, currentIterationBid, "black", currentMovement))
+                        {
+                            this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationBid);
+                            noMoreDR = true;
+                        }
                     }
                 }
             }
@@ -621,21 +697,36 @@ export class piecesMovementService
         //col-1 row+1
         var downRightMove = (colPos-1).toString() + (rowPos+1).toString();
 
+        var filteredKingMovesArr: string[] = [];
         var kingMovesArr: string[] = [upMove, downMove, rightMove, leftMove, upLeftMove, upRightMove, downLeftMove, downRightMove];
 
-        for(var s = 0; s < kingMovesArr.length; s++)
+        for(var i = 0; i < kingMovesArr.length; i++)
         {
-            if(!this.chessPiecesDataService.isThePieceBlack(parseInt(kingMovesArr[s])))
+            var currPotentialKingMove = kingMovesArr[i];
+            if(parseInt(currPotentialKingMove[0]) > 0 && parseInt(currPotentialKingMove[0]) < 9)
             {
-                this.chessPiecesDataService.addPotentialMove(parseInt(id), kingMovesArr[s]);
+                if(parseInt(currPotentialKingMove[1]) > 0 && parseInt(currPotentialKingMove[1]) < 9)
+                {
+                    filteredKingMovesArr.unshift(currPotentialKingMove);
+                }
+            }
+        }
+        for(var s = 0; s < filteredKingMovesArr.length; s++)
+        {
+            if(!this.chessPiecesDataService.isThePieceBlack(parseInt(filteredKingMovesArr[s])) && !this.isMyKingInCheckAfterMyMove(id,filteredKingMovesArr[s],"black","king"))
+            {
+                this.chessPiecesDataService.addPotentialMove(parseInt(id), filteredKingMovesArr[s]);
             }
         }
     }
 
     public blackQueenMovement(id: string)
     {
-        this.blackBishopMovement(id);
+        this.isQueenMovement = true;
         this.blackRookMovement(id);
+        this.isQueenMovement = true;
+        this.blackBishopMovement(id);
+        this.isQueenMovement = false;
     }
 
     public whitePawnMovement(id: string)
@@ -1024,8 +1115,274 @@ export class piecesMovementService
 
     public whiteQueenMovement(id: string)
     {
-        this.whiteBishopMovement(id);
-        this.whiteRookMovement(id);
+        //Bishop
+        var colPos = parseInt(id[0]);
+        var rowPos = parseInt(id[1]);
+
+        //checks whether there is a piece on the way
+        var noMoreUL = false;
+        var noMoreUR = false;
+        var noMoreDL = false;
+        var noMoreDR = false;
+
+        var c = colPos + 1;
+        var r = rowPos - 1;
+
+        //col+i row-i UL
+        while(c <= 8 && r > 0)
+        {
+            if(!noMoreUL)
+            {
+                var currentIterationBid = c.toString() + r.toString();
+                if(this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationBid)))
+                {
+                    noMoreUL = true;
+                }
+                else
+                {
+                    if(!this.chessPiecesDataService.isThePieceBlack(parseInt(currentIterationBid)))
+                    {
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationBid);
+                    }
+                    else
+                    {
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationBid);
+                        noMoreUL = true;
+                    }
+                }
+            }
+            else
+            {
+                break;
+            }
+            c++;
+            r--;
+        }
+
+        c = colPos+1;
+        r = rowPos+1;
+
+        //col+i row+i UR
+        while(c <= 8 && r <= 8)
+        {
+            if(!noMoreUR)
+            {
+                var currentIterationBid = c.toString() + r.toString();
+                if(this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationBid)))
+                {
+                    noMoreUR = true;
+                }
+                else
+                {
+                    if(!this.chessPiecesDataService.isThePieceBlack(parseInt(currentIterationBid)))
+                    {
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationBid);
+                    }
+                    else
+                    {
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationBid);
+                        noMoreUR = true;
+                    }
+                }
+            }
+            else
+            {
+                break;
+            }
+            c++;
+            r++;
+        }
+
+        c = colPos-1;
+        r = rowPos-1;
+
+        //col-i row-i DL
+        while(c > 0 && r > 0)
+        {
+            if(!noMoreDL)
+            {
+                var currentIterationCid = c.toString() + r.toString();
+                if(this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationCid)))
+                {
+                    noMoreDL = true;
+                }
+                else
+                {
+                    if(!this.chessPiecesDataService.isThePieceBlack(parseInt(currentIterationCid)))
+                    {
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationCid);
+                    }
+                    else
+                    {
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationCid);
+                        noMoreDL = true;
+                    }
+                }
+            }
+            else
+            {
+                break;
+            }
+            c--;
+            r--;
+        }
+        
+        c = colPos-1;
+        r = rowPos+1;
+
+        //col-i row+i DR
+        while(c > 0 && r <= 8)
+        {
+            if(!noMoreDR)
+            {
+                var currentIterationGid = c.toString() + r.toString();
+                if(this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationGid)))
+                {
+                    noMoreDR = true;
+                }
+                else
+                {
+                    if(!this.chessPiecesDataService.isThePieceBlack(parseInt(currentIterationGid)))
+                    {
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationGid);
+                    }
+                    else
+                    {
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationGid);
+                        noMoreDR = true;
+                    }
+                }
+            }
+            else
+            {
+                break;
+            }
+            c--;
+            r++;
+        }
+        //rook
+        var colPos = parseInt(id[0]);
+        var rowPos = parseInt(id[1]);    
+
+        var noMoreUpwardMoves = false;
+        var noMoreDownwardMoves = false;
+        var noMoreRightMoves = false;
+        var noMoreLeftMoves = false;
+
+        //checks for all possible upward moves
+        for(var c = colPos + 1; c <= 8; c++)
+        {
+            if(!noMoreUpwardMoves)
+            {
+                var currentIterationId = c.toString() + rowPos.toString();
+                if(this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationId)))
+                {
+                    noMoreUpwardMoves = true;
+                }
+                else
+                {
+                    if(!this.chessPiecesDataService.isThePieceBlack(parseInt(currentIterationId)))
+                    {
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationId);
+                    }
+                    else
+                    {
+                        noMoreUpwardMoves = true;
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationId);
+                    }
+                }
+            }
+            else{
+                break;
+            }
+        }
+
+        //checks for all possible downward moves
+        for(var c1 = colPos - 1; c1 >= 1; c1--)
+        {
+            if(!noMoreDownwardMoves)
+            {
+                var currentIterationId1 = c1.toString() + rowPos.toString();
+                if(this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationId1)))
+                {
+                    noMoreDownwardMoves = true;
+                }
+                else
+                {
+                    if(!this.chessPiecesDataService.isThePieceBlack(parseInt(currentIterationId1)))
+                    {
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationId1);
+                    }
+                    else
+                    {
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationId1);
+                        noMoreDownwardMoves = true;
+                    }
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        //checks for all possible right moves
+        for(var r = rowPos + 1; r <= 8; r++)
+        {
+            if(!noMoreRightMoves)
+            {
+                var currentIterationId2 = colPos.toString() + r.toString();
+                if(this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationId2)))
+                {
+                    noMoreRightMoves = true;
+                }
+                else
+                {
+                    if(!this.chessPiecesDataService.isThePieceBlack(parseInt(currentIterationId2)))
+                    {
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationId2);
+                    }
+                    else
+                    {
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationId2);
+                        noMoreRightMoves = true;
+                    }
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        //checks for all possible left moves
+        for(var r1 = rowPos - 1; r1 >=1; r1--)
+        {
+            if(!noMoreLeftMoves)
+            {
+                var currentIterationId3 = colPos.toString() + r1.toString();
+                if(this.chessPiecesDataService.isThePieceWhite(parseInt(currentIterationId3)))
+                {
+                    noMoreLeftMoves = true;
+                }
+                else
+                {
+                    if(!this.chessPiecesDataService.isThePieceBlack(parseInt(currentIterationId3)))
+                    {
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationId3);
+                    }
+                    else
+                    {
+                        this.chessPiecesDataService.addPotentialMove(parseInt(id), currentIterationId3);
+                        noMoreLeftMoves = true;
+                    }
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
     }
 
     public allWhitePotentialMovements(){

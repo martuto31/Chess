@@ -34,13 +34,14 @@ public isFirstTurn: boolean = true;
 
    var potentialMoveElements = document.getElementsByClassName("potentialMove");
 
+   console.log(this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(this.targetFieldId)));
   if(this.currentTurn == "white")
   {
-      if(this.isFirstTurn)
-      {
-        this.piecesMovementService.checkAllPotentialMoves();
-      }
-
+    if(this.isFirstTurn)
+    {
+      this.piecesMovementService.removeAllPotentialMoves();
+      this.piecesMovementService.checkAllPotentialMoves();
+    }
       console.log(this.piecesMovementService.inCheck);
       if(this.chessPiecesDataService.isTileClear(parseInt(this.targetFieldId)) || this.chessPiecesDataService.selectedPieceColour(parseInt(this.targetFieldId)) === "black")
       {
@@ -80,9 +81,9 @@ public isFirstTurn: boolean = true;
   {
     if(this.isFirstTurn)
     {
+      this.piecesMovementService.removeAllPotentialMoves();
       this.piecesMovementService.checkAllPotentialMoves();
     }
-
     if(this.chessPiecesDataService.isTileClear(parseInt(this.targetFieldId)) || this.chessPiecesDataService.selectedPieceColour(parseInt(this.targetFieldId)) === "white")
     {
       this.tryMovePiece(this.targetFieldId);
@@ -141,8 +142,6 @@ public isFirstTurn: boolean = true;
         this.piecesMovementService.figurePlacingCheckId = "";
         this.piecesMovementService.removeAllPotentialMoves();
         this.piecesMovementService.checkAllPotentialMoves();
-        this.piecesMovementService.isInCheck("white");
-        this.piecesMovementService.isInCheck("black");
         console.log("is it in check after move" + this.piecesMovementService.inCheck);
       }
       var potentialMoveElements = document.getElementsByClassName("potentialMove");
