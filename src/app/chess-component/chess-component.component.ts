@@ -15,6 +15,7 @@ public targetFieldId: string = "";
 public targetPlayer: string = "";
 public isGameOver: boolean = false;
 public currentTurn: string = "white";
+public currentTurnBool: boolean = true;
 public isFirstTurn: boolean = true;
 
  onReset()
@@ -24,6 +25,8 @@ public isFirstTurn: boolean = true;
  constructor(private piecesMovementService: piecesMovementService, private chessPiecesDataService: chessPiecesDataService) { }
 
  ngOnInit(): void {
+  this.piecesMovementService.checkAllColourPotentialMoves("white", true);
+  //this.piecesMovementService.checkAllColourPotentialMoves("black", true);
  }
 
  onCalled(event: any)
@@ -34,14 +37,16 @@ public isFirstTurn: boolean = true;
 
    var potentialMoveElements = document.getElementsByClassName("potentialMove");
 
+  this.piecesMovementService.setCurrentTurn(this.currentTurnBool);
+  //console.log(this.isFirstTurn);
+
    console.log(this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(this.targetFieldId)));
   if(this.currentTurn == "white")
   {
-    if(this.isFirstTurn)
-    {
-      this.piecesMovementService.removeAllPotentialMoves();
-      this.piecesMovementService.checkAllPotentialMoves();
-    }
+    // if(this.isFirstTurn)
+    // {
+    //   this.piecesMovementService.checkAllColourPotentialMoves("white", true);
+    // }
       console.log(this.piecesMovementService.inCheck);
       if(this.chessPiecesDataService.isTileClear(parseInt(this.targetFieldId)) || this.chessPiecesDataService.selectedPieceColour(parseInt(this.targetFieldId)) === "black")
       {
@@ -79,11 +84,12 @@ public isFirstTurn: boolean = true;
     }
   else if(this.currentTurn == "black")
   {
-    if(this.isFirstTurn)
-    {
-      this.piecesMovementService.removeAllPotentialMoves();
-      this.piecesMovementService.checkAllPotentialMoves();
-    }
+    // if(this.isFirstTurn)
+    // {
+    //   this.piecesMovementService.checkAllColourPotentialMoves("black", true);
+    //   this.isFirstTurn = false;
+    // }
+
     if(this.chessPiecesDataService.isTileClear(parseInt(this.targetFieldId)) || this.chessPiecesDataService.selectedPieceColour(parseInt(this.targetFieldId)) === "white")
     {
       this.tryMovePiece(this.targetFieldId);
@@ -123,26 +129,52 @@ public isFirstTurn: boolean = true;
 
   tryMovePiece(id: string)
   {
-      var isPotentialMove = this.chessPiecesDataService.isPotentialMove(parseInt(this.piecesMovementService.latestFieldId), id);
+      var latestPieceId: number = parseInt(this.piecesMovementService.latestFieldId);
+      var latestPieceType1 = this.piecesMovementService.latestPieceType;
+      var isPotentialMove = this.chessPiecesDataService.isPotentialMove(latestPieceId, id);
 
       if(id == this.targetFieldId && isPotentialMove)
       {
+        var latestPieceColour = "";
         if(this.piecesMovementService.latestPieceColour == 'black')
         {
-          this.chessPiecesDataService.addBlackPieceOnTile(parseInt(id), this.piecesMovementService.latestPieceType);
+          this.chessPiecesDataService.addBlackPieceOnTile(parseInt(id), latestPieceType1);
+          latestPieceColour = "black";
           this.currentTurn = "white";
+          this.currentTurnBool = true;
+          console.log("curr turn: white");
         }
         else if(this.piecesMovementService.latestPieceColour == 'white')
         {
-          this.chessPiecesDataService.addWhitePieceOnTile(parseInt(id), this.piecesMovementService.latestPieceType);
+          this.chessPiecesDataService.addWhitePieceOnTile(parseInt(id), latestPieceType1);
+          latestPieceColour = "white";
           this.currentTurn = "black";
+          this.currentTurnBool = false;
+          console.log("curr turn: black");
         }
-        this.chessPiecesDataService.removePieceFromTile(parseInt(this.piecesMovementService.latestFieldId));
-        this.piecesMovementService.inCheck = false;
-        this.piecesMovementService.figurePlacingCheckId = "";
+        this.chessPiecesDataService.removePieceFromTile(latestPieceId);
+        // this.piecesMovementService.figurePlacingCheckId = "";
+        // this.piecesMovementService.removeAllPotentialMoves();
+        // this.piecesMovementService.checkAllPotentialMoves();
+        this.chessPiecesDataService.deleteAllPotentialMoves(latestPieceId);
         this.piecesMovementService.removeAllPotentialMoves();
-        this.piecesMovementService.checkAllPotentialMoves();
-        console.log("is it in check after move" + this.piecesMovementService.inCheck);
+        if(latestPieceColour === "white")
+        {
+          this.piecesMovementService.checkAllColourPotentialMoves("white", true);
+          this.piecesMovementService.removeAllColourPotentialMoves("black");
+          this.piecesMovementService.checkAllColourPotentialMoves("black", false);
+        }
+        else if(latestPieceColour === "black")
+        {
+          this.piecesMovementService.checkAllColourPotentialMoves("black", true);
+          this.piecesMovementService.removeAllColourPotentialMoves("white");
+          this.piecesMovementService.checkAllColourPotentialMoves("white", false);
+        }
+        //this.piecesMovementService.inCheck = false;
+        //this.piecesMovementService.checkAllPotentialMovesById(latestPieceId.toString(), latestPieceColour, latestPieceType1)
+
+        console.log("funcCounter: " + this.piecesMovementService.inFuncCounter);
+        //console.log("is it in check after move" + this.piecesMovementService.inCheck);
       }
       var potentialMoveElements = document.getElementsByClassName("potentialMove");
       while(potentialMoveElements.length > 0)
