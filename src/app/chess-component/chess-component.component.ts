@@ -11,12 +11,12 @@ import { chessPiece } from './shared/chess-piece-model';
 })
 export class ChessComponentComponent implements OnInit 
 {
-public targetFieldId: string = "";
-public targetPlayer: string = "";
-public isGameOver: boolean = false;
-public currentTurn: string = "white";
-public currentTurnBool: boolean = true;
-public isFirstTurn: boolean = true;
+  public targetFieldId: string = "";
+  public targetPlayer: string = "";
+  public isGameOver: boolean = false;
+  public currentTurn: string = "white";
+  public currentTurnBool: boolean = true;
+  public isFirstTurn: boolean = true;
 
  onReset()
  {
@@ -26,28 +26,21 @@ public isFirstTurn: boolean = true;
 
  ngOnInit(): void {
   this.piecesMovementService.checkAllColourPotentialMoves("white", true);
-  //this.piecesMovementService.checkAllColourPotentialMoves("black", true);
  }
 
  onCalled(event: any)
  {
-   var target = event.target;
-   this.targetFieldId = target.id;
-   var chessPiece = this.chessPiecesDataService.seletedPieceType(parseInt(this.targetFieldId));
+    var target = event.target;
+    this.targetFieldId = target.id;
+    var chessPiece = this.chessPiecesDataService.seletedPieceType(parseInt(this.targetFieldId));
 
-   var potentialMoveElements = document.getElementsByClassName("potentialMove");
+    var potentialMoveElements = document.getElementsByClassName("potentialMove");
 
-  this.piecesMovementService.setCurrentTurn(this.currentTurnBool);
-  //console.log(this.isFirstTurn);
+    this.piecesMovementService.setCurrentTurn(this.currentTurnBool);
 
    console.log(this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(this.targetFieldId)));
-  if(this.currentTurn == "white")
-  {
-    // if(this.isFirstTurn)
-    // {
-    //   this.piecesMovementService.checkAllColourPotentialMoves("white", true);
-    // }
-      console.log(this.piecesMovementService.inCheck);
+    if(this.currentTurn == "white")
+    {
       if(this.chessPiecesDataService.isTileClear(parseInt(this.targetFieldId)) || this.chessPiecesDataService.selectedPieceColour(parseInt(this.targetFieldId)) === "black")
       {
         this.tryMovePiece(this.targetFieldId);
@@ -84,12 +77,6 @@ public isFirstTurn: boolean = true;
     }
   else if(this.currentTurn == "black")
   {
-    // if(this.isFirstTurn)
-    // {
-    //   this.piecesMovementService.checkAllColourPotentialMoves("black", true);
-    //   this.isFirstTurn = false;
-    // }
-
     if(this.chessPiecesDataService.isTileClear(parseInt(this.targetFieldId)) || this.chessPiecesDataService.selectedPieceColour(parseInt(this.targetFieldId)) === "white")
     {
       this.tryMovePiece(this.targetFieldId);
@@ -150,13 +137,8 @@ public isFirstTurn: boolean = true;
           latestPieceColour = "white";
           this.currentTurn = "black";
           this.currentTurnBool = false;
-          console.log("curr turn: black");
         }
         this.chessPiecesDataService.removePieceFromTile(latestPieceId);
-        // this.piecesMovementService.figurePlacingCheckId = "";
-        // this.piecesMovementService.removeAllPotentialMoves();
-        // this.piecesMovementService.checkAllPotentialMoves();
-        this.chessPiecesDataService.deleteAllPotentialMoves(latestPieceId);
         this.piecesMovementService.removeAllPotentialMoves();
         if(latestPieceColour === "white")
         {
@@ -170,12 +152,15 @@ public isFirstTurn: boolean = true;
           this.piecesMovementService.removeAllColourPotentialMoves("white");
           this.piecesMovementService.checkAllColourPotentialMoves("white", false);
         }
-        //this.piecesMovementService.inCheck = false;
-        //this.piecesMovementService.checkAllPotentialMovesById(latestPieceId.toString(), latestPieceColour, latestPieceType1)
+
+        if(this.chessPiecesDataService.isCheckMate(this.currentTurn))
+        {
+          console.log("checkmate");
+        }
 
         console.log("funcCounter: " + this.piecesMovementService.inFuncCounter);
-        //console.log("is it in check after move" + this.piecesMovementService.inCheck);
       }
+      
       var potentialMoveElements = document.getElementsByClassName("potentialMove");
       while(potentialMoveElements.length > 0)
       {

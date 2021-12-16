@@ -7,7 +7,6 @@ export class piecesMovementService
     public latestFieldId: string = "";
     public latestPieceType: string = "";
     public latestPieceColour: string = "";
-    public inCheck: boolean = false;
     public figurePlacingCheckId: string = "";
     private isQueenMovement: boolean = false;
     public currentTurn: boolean = true;
@@ -17,36 +16,10 @@ export class piecesMovementService
     constructor(private chessPiecesDataService: chessPiecesDataService){
     }
 
-    // isInCheck(kingColour: string){
-    //     if(kingColour === "white")
-    //     {
-    //         var whiteKingPos = this.chessPiecesDataService.piecesData.find(p => (p.piece === "king") &&(p.colour === "white"))!.id;
-    //         this.chessPiecesDataService.piecesData.forEach(element => {
-    //             if(element.colour === "black" && element.potentialMoves.includes(whiteKingPos!.toString()))
-    //             {
-    //                 this.inCheck = true;
-    //                 this.figurePlacingCheckId = element.id.toString();
-    //             }
-    //         });
-    //     }
-    //     else if(kingColour === "black")
-    //     {
-    //         var blackKingPos = this.chessPiecesDataService.piecesData.find(p => (p.piece === "king") &&(p.colour === "black"))!.id;
-    //         this.chessPiecesDataService.piecesData.forEach(element => {
-    //             if(element.colour === "white" && element.potentialMoves.includes(blackKingPos!.toString()))
-    //             {
-    //                 this.inCheck = true;
-    //                 this.figurePlacingCheckId = element.id.toString();
-    //             }
-    //         });
-        // }
-    // }
-
     setCurrentTurn(currTurn: boolean)
     {
         this.currentTurn = currTurn;
     }
-
 
     isMyKingInCheckAfterMyMove(pieceId: string, potentialMoveId: string, pieceColour: string, piece: string,){
         //clearing the tile of the selected piece to check if the king would be in check after move of the selected piece
@@ -55,10 +28,8 @@ export class piecesMovementService
 
         this.inFuncCounter++;
 
-        //console.log("its in king check func");
         var pieceOntoPotentialMove: string = this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(potentialMoveId))!.piece;
         var colourOntoPotentialMove: string = this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(potentialMoveId))!.colour;
-        //console.log(pieceOntoPotentialMove);
         var noPieceOntoPotentialMove: boolean = false;
         //simulating a move and checking if the King still would be in check after making a move
         if(pieceOntoPotentialMove === "")
@@ -73,7 +44,6 @@ export class piecesMovementService
         if(pieceColour === "white")
         {
             var whiteKingPos = this.chessPiecesDataService.piecesData.find(p => (p.piece === "king") &&(p.colour === "white"))!.id;
-            //this.removeAllColourPotentialMoves("black");
             this.checkAllColourPotentialMoves("black", true);
             this.chessPiecesDataService.piecesData.forEach(element => {
                 if(element.colour === "black" && element.potentialMoves.includes(whiteKingPos.toString()))
@@ -94,26 +64,14 @@ export class piecesMovementService
             this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(pieceId))!.colour = pieceColour;
             this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(pieceId))!.piece = piece;
             this.removeAllColourPotentialMoves("black");
-            // this.checkAllColourPotentialMoves("black", true);
-            // if(this.currentTurn === false)
-            // {
-            //     this.checkAllColourPotentialMoves("black", false);
-            // }
-            // else
-            // {
-            //     this.checkAllColourPotentialMoves("black", true);
-            // }
         }
         else if(pieceColour === "black")
         {
-            //console.log(this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(pieceId)));
             var blackKingPos = this.chessPiecesDataService.piecesData.find(p => (p.piece === "king") &&(p.colour === "black"))!.id;
-            //this.removeAllColourPotentialMoves("white");
             this.checkAllColourPotentialMoves("white", true);
             this.chessPiecesDataService.piecesData.forEach(element => {
                 if(element.colour === "white" && element.potentialMoves.includes(blackKingPos.toString()))
                 {
-                    //console.log("the king is in check from: " + piece);
                     isInCheckAfterMove = true;
                 }
             });
@@ -130,74 +88,9 @@ export class piecesMovementService
             this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(pieceId))!.colour = pieceColour;
             this.chessPiecesDataService.piecesData.find(p => p.id == parseInt(pieceId))!.piece = piece;
             this.removeAllColourPotentialMoves("white");
-            // this.checkAllColourPotentialMoves("white", true);
-            // if(this.currentTurn === false)
-            // {
-            //     this.checkAllColourPotentialMoves("white", true);
-            // }
-            // else
-            // {
-            //     this.checkAllColourPotentialMoves("white", false);
-            // }
         }
         return isInCheckAfterMove;
     }
-
-    // checkAllPotentialMovesById(pieceId: string, pieceColour: string, pieceType: string)
-    // {
-    //     if(pieceColour === "white")
-    //         {
-    //             switch(pieceType)
-    //             {
-    //                 case "pawn":
-    //                     this.whitePawnMovement(pieceId, false);
-    //                     break;
-    //                 case "rook":
-    //                         this.whiteRookMovement(pieceId, false);
-    //                         break;
-    //                 case "horse":
-    //                         this.whiteHorseMovement(pieceId, false);
-    //                         break;
-    //                 case "bishop":
-    //                         this.whiteBishopMovement(pieceId, false);
-    //                         break;
-    //                 case "queen":
-    //                         this.whiteQueenMovement(pieceId, false);
-    //                         break;
-    //                 case "king":
-    //                         this.whiteKingMovement(pieceId, false);
-    //                         break;
-    //                 default:
-    //                         break;
-    //             }
-    //         }
-    //         else if(pieceColour === "black")
-    //         {
-    //             switch(pieceType)
-    //             {
-    //                 case "pawn":
-    //                     this.blackPawnMovement(pieceId, false);
-    //                     break;
-    //                 case "rook":
-    //                     this.blackRookMovement(pieceId, false);
-    //                     break;
-    //                 case "horse":
-    //                     this.blackHorseMovement(pieceId, false);
-    //                     break;
-    //                 case "bishop":
-    //                     this.blackBishopMovement(pieceId, false);
-    //                     break;
-    //                 case "queen":
-    //                     this.blackQueenMovement(pieceId, false);
-    //                     break;
-    //                 case "king":
-    //                     this.blackKingMovement(pieceId, false);
-    //                     break;
-    //                 default:
-    //                     break;
-    //             }
-    //         }
-    // }
 
     checkAllPotentialMoves()
     {
@@ -339,7 +232,6 @@ export class piecesMovementService
         this.latestFieldId = id.toString();
         var arrayOfPotentialMoves: string[];
         arrayOfPotentialMoves = this.chessPiecesDataService.piecesData.find(p => p.id == id)!.potentialMoves;
-        //console.log("array: "+ arrayOfPotentialMoves);
         for(var i = 0; i < arrayOfPotentialMoves.length; i++)
         {
             document.getElementById(arrayOfPotentialMoves[i])?.classList.add("potentialMove");
@@ -1495,7 +1387,6 @@ export class piecesMovementService
             {
                 if(parseInt(currentPotentialHorseMove[1]) > 0 && parseInt(currentPotentialHorseMove[1]) < 9)
                 {
-                    //console.log("white horse: " + currentPotentialHorseMove);
                     filteredHorseMovesArr.unshift(currentPotentialHorseMove);
                 }
             }

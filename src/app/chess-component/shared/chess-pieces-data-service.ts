@@ -79,6 +79,26 @@ export class chessPiecesDataService
         {id: 87, pieceType: ChessFigures.WhiteHorse, piece: "horse", colour: "white", potentialMoves: []},
         {id: 88, pieceType: ChessFigures.WhiteRook, piece: "rook", colour: "white", potentialMoves: []},
     ]
+
+    isCheckMate(piecesColour: string){
+      var potentialMoveCounter: number = 0;
+      this.piecesData.forEach(p => {
+        if(p.colour === piecesColour)
+        {
+          potentialMoveCounter += p.potentialMoves.length;
+        }
+      })
+      console.log(potentialMoveCounter);
+      if(potentialMoveCounter > 0)
+      {
+        return false;
+      }
+      else
+      {
+        return true;
+      }
+    }
+
     deletePotentialMove(id: number, potentialMove: string){
       var selectedPiece = this.piecesData.find(p => p.id == id)
       var indexOfPotentialMove = selectedPiece!.potentialMoves.indexOf(potentialMove);
