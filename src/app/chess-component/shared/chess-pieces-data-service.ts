@@ -1,5 +1,3 @@
-import { identifierModuleUrl } from "@angular/compiler";
-import { Injectable } from "@angular/core";
 import { ChessFigures } from "./chess-figures";
 import { chessPiece} from "./chess-piece-model";
 
