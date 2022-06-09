@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ChessFigures } from './shared/chess-figures';
 import { piecesMovementService } from './shared/chess-pieces-movement-service';
 import { chessPiecesDataService } from './shared/chess-pieces-data-service';
-import { chessPiece } from './shared/chess-piece-model';
-
 @Component({
   selector: 'app-chess-component',
   templateUrl: './chess-component.component.html',
